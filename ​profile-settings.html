@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile Settings | EduCoffee</title>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --bg-color: #FDFBF7;
+            --primary-coffee: #3E2723;
+            --accent-caramel: #C68642;
+            --text-main: #2D241E;
+            --text-muted: #7D6E64;
+            --card-bg: #FFFFFF;
+            --border-light: rgba(62, 39, 35, 0.08);
+            --shadow: 0 4px 20px rgba(62, 39, 35, 0.04);
+            --danger: #D32F2F;
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            padding-bottom: 40px;
+        }
+
+        header {
+            background: var(--card-bg);
+            padding: 16px 24px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: var(--shadow);
+            border-bottom: 1px solid var(--border-light);
+        }
+
+        .back-btn {
+            color: var(--primary-coffee);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 35px;
+            height: 35px;
+            border-radius: 10px;
+            background: var(--bg-color);
+        }
+
+        header h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.25rem;
+            color: var(--primary-coffee);
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 20px auto;
+            padding: 0 20px;
+        }
+
+        /* Profile Header */
+        .profile-header {
+            background: var(--card-bg);
+            border-radius: 28px;
+            padding: 30px;
+            text-align: center;
+            box-shadow: var(--shadow);
+            margin-bottom: 25px;
+            border: 1px solid var(--border-light);
+        }
+
+        .avatar-container {
+            position: relative;
+            width: 100px;
+            height: 100px;
+            margin: 0 auto 15px;
+        }
+
+        .avatar-preview {
+            width: 100%;
+            height: 100%;
+            border-radius: 30px;
+            background: var(--primary-coffee);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.5rem;
+            font-family: 'Playfair Display', serif;
+            background-size: cover;
+            background-position: center;
+            border: 4px solid #fff;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        }
+
+        .role-badge {
+            display: inline-block;
+            padding: 4px 12px;
+            background: var(--accent-caramel);
+            color: white;
+            font-size: 0.7rem;
+            font-weight: 700;
+            border-radius: 50px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-top: 10px;
+        }
+
+        /* Forms */
+        .settings-card {
+            background: var(--card-bg);
+            border-radius: 28px;
+            padding: 25px;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border-light);
+            margin-bottom: 20px;
+        }
+
+        .section-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.1rem;
+            color: var(--primary-coffee);
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .form-group {
+            margin-bottom: 18px;
+        }
+
+        label {
+            display: block;
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: var(--text-muted);
+            margin-bottom: 6px;
+        }
+
+        input {
+            width: 100%;
+            padding: 12px 16px;
+            border-radius: 14px;
+            border: 1px solid var(--border-light);
+            background: var(--bg-color);
+            font-family: inherit;
+            font-size: 0.95rem;
+            transition: var(--transition);
+            color: var(--text-main);
+        }
+
+        input:focus {
+            outline: none;
+            border-color: var(--accent-caramel);
+            background: white;
+        }
+
+        input:disabled {
+            background: #f5f5f5;
+            color: #999;
+            cursor: not-allowed;
+        }
+
+        .info-note {
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            margin-top: 5px;
+        }
+
+        /* Buttons */
+        .btn-save {
+            width: 100%;
+            padding: 15px;
+            background: var(--primary-coffee);
+            color: white;
+            border: none;
+            border-radius: 16px;
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .btn-save:hover { background: var(--accent-caramel); }
+
+        .btn-logout {
+            width: 100%;
+            padding: 15px;
+            background: transparent;
+            color: var(--danger);
+            border: 2px solid var(--danger);
+            border-radius: 16px;
+            font-weight: 600;
+            margin-top: 10px;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .btn-logout:hover { background: var(--danger); color: white; }
+
+        /* Student Only - Request Class Update */
+        #studentClassSection {
+            background: rgba(198, 134, 66, 0.05);
+            border: 1px dashed var(--accent-caramel);
+            padding: 15px;
+            border-radius: 16px;
+            margin-top: 10px;
+        }
+
+        .toast {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%) translateY(100px);
+            background: var(--primary-coffee);
+            color: white;
+            padding: 12px 24px;
+            border-radius: 50px;
+            font-size: 0.9rem;
+            z-index: 2000;
+            transition: transform 0.3s ease;
+        }
+
+        .toast.show { transform: translateX(-50%) translateY(0); }
+    </style>
+</head>
+<body>
+
+    <header>
+        <a href="#" id="dashboardLink" class="back-btn">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"></polyline></svg>
+        </a>
+        <h1>Profile Settings</h1>
+    </header>
+
+    <main class="container">
+        
+        <!-- Profile Header -->
+        <div class="profile-header">
+            <div class="avatar-container">
+                <div class="avatar-preview" id="avatarPreview">A</div>
+            </div>
+            <h2 id="displayUserName" style="font-family: 'Playfair Display', serif;">User Name</h2>
+            <span class="role-badge" id="roleBadge">Student</span>
+        </div>
+
+        <!-- Account Settings Card -->
+        <div class="settings-card">
+            <div class="section-title">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                Personal Information
+            </div>
+
+            <div class="form-group">
+                <label>Full Name</label>
+                <input type="text" id="userName" placeholder="Your Name">
+                <p class="info-note" id="nameNote"></p>
+            </div>
+
+            <div class="form-group">
+                <label>Email Address</label>
+                <input type="email" id="userEmail" placeholder="email@example.com">
+                <p class="info-note" id="emailNote"></p>
+            </div>
+
+            <div class="form-group">
+                <label>Phone Number</label>
+                <input type="tel" id="userPhone" placeholder="01XXXXXXXXX">
+            </div>
+
+            <!-- Student Specific Section -->
+            <div id="studentOnlySection" style="display: none;">
+                <div class="form-group">
+                    <label>Current Batch Code</label>
+                    <input type="text" id="batchCode" disabled>
+                </div>
+                <div id="studentClassSection">
+                    <p style="font-size: 0.8rem; font-weight: 600; color: var(--accent-caramel); margin-bottom: 8px;">Request Class/Batch Update</p>
+                    <div style="display: flex; gap: 10px;">
+                        <input type="text" id="newBatchCode" placeholder="Enter New Code" style="background: white;">
+                        <button onclick="requestUpdate()" style="padding: 0 15px; border-radius: 12px; border: none; background: var(--accent-caramel); color: white; font-weight: 600; font-size: 0.75rem;">Request</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Teacher Specific Section -->
+            <div id="teacherOnlySection" style="display: none;">
+                <div class="form-group">
+                    <label>Institute Name</label>
+                    <input type="text" id="instituteName" placeholder="Your Institute">
+                </div>
+                <div class="form-group">
+                    <label>Bio / Description</label>
+                    <input type="text" id="teacherBio" placeholder="Expert in Physics...">
+                </div>
+            </div>
+
+            <button class="btn-save" onclick="saveSettings()">Save Changes</button>
+        </div>
+
+        <!-- Danger Zone -->
+        <div class="settings-card" style="border-color: rgba(211, 47, 47, 0.2);">
+            <div class="section-title" style="color: var(--danger);">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18.36 6.64a9 9 0 1 1-12.73 0"/></svg>
+                Account Security
+            </div>
+            <button class="btn-logout" onclick="handleLogout()">Logout Account</button>
+        </div>
+
+    </main>
+
+    <div id="toast" class="toast">Settings updated successfully!</div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const userRole = localStorage.getItem('userRole') || 'student';
+            const name = localStorage.getItem('studentName') || 'Guest User';
+            const email = localStorage.getItem('studentEmail') || 'notset@educoffee.com';
+            const phone = localStorage.getItem('studentPhone') || '';
+            const batch = localStorage.getItem('joinedBatch') || 'N/A';
+
+            // Initial UI Setup
+            document.getElementById('displayUserName').innerText = name;
+            document.getElementById('userName').value = name;
+            document.getElementById('userEmail').value = email;
+            document.getElementById('userPhone').value = phone;
+            document.getElementById('avatarPreview').innerText = name.charAt(0);
+            document.getElementById('roleBadge').innerText = userRole;
+
+            // Link to correct dashboard
+            document.getElementById('dashboardLink').href = userRole === 'teacher' ? 'teacher-dashboard.html' : 'student-dashboard.html';
+
+            // Role-based Restrictions
+            if (userRole === 'student') {
+                document.getElementById('studentOnlySection').style.display = 'block';
+                document.getElementById('batchCode').value = batch;
+                
+                // Lockdown critical info for students
+                document.getElementById('userName').disabled = true;
+                document.getElementById('userEmail').disabled = true;
+                document.getElementById('nameNote').innerText = "⚠️ Only teacher can update your registered name.";
+                document.getElementById('emailNote').innerText = "⚠️ Email is locked for security.";
+            } else {
+                document.getElementById('teacherOnlySection').style.display = 'block';
+                document.getElementById('roleBadge').style.background = '#3E2723';
+            }
+        });
+
+        function saveSettings() {
+            const userRole = localStorage.getItem('userRole');
+            
+            // Only update what is allowed
+            if (userRole === 'teacher') {
+                localStorage.setItem('studentName', document.getElementById('userName').value);
+                localStorage.setItem('studentEmail', document.getElementById('userEmail').value);
+            }
+            
+            localStorage.setItem('studentPhone', document.getElementById('userPhone').value);
+            
+            showToast('Changes saved successfully!');
+            setTimeout(() => {
+                location.reload();
+            }, 1000);
+        }
+
+        function requestUpdate() {
+            const code = document.getElementById('newBatchCode').value;
+            if(!code) return alert("Enter a valid batch code");
+            showToast('Request sent to teacher!');
+            document.getElementById('newBatchCode').value = '';
+        }
+
+        function showToast(msg) {
+            const toast = document.getElementById('toast');
+            toast.innerText = msg;
+            toast.classList.add('show');
+            setTimeout(() => toast.classList.remove('show'), 3000);
+        }
+
+        function handleLogout() {
+            if(confirm("Are you sure you want to logout?")) {
+                localStorage.clear();
+                window.location.href = 'login.html';
+            }
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Post Notice | EduCoffee</title>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --bg-color: #FDFBF7;
+            --primary-coffee: #3E2723;
+            --accent-caramel: #C68642;
+            --text-main: #2D241E;
+            --text-muted: #7D6E64;
+            --card-bg: #FFFFFF;
+            --border: rgba(62, 39, 35, 0.1);
+            --shadow: 0 10px 40px rgba(62, 39, 35, 0.05);
+            --transition: all 0.3s ease;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            padding-bottom: 80px;
+        }
+
+        header {
+            padding: 20px 24px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            background: var(--card-bg);
+            box-shadow: var(--shadow);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .back-btn {
+            color: var(--primary-coffee);
+            text-decoration: none;
+        }
+
+        header h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.3rem;
+            color: var(--primary-coffee);
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 30px auto;
+            padding: 0 20px;
+        }
+
+        .form-card {
+            background: var(--card-bg);
+            padding: 30px;
+            border-radius: 24px;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border);
+        }
+
+        .label-group {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        label {
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--text-muted);
+        }
+
+        textarea {
+            width: 100%;
+            min-height: 150px;
+            padding: 18px;
+            border-radius: 16px;
+            border: 1px solid var(--border);
+            background: var(--bg-color);
+            font-family: inherit;
+            font-size: 1rem;
+            color: var(--text-main);
+            resize: vertical;
+            transition: var(--transition);
+        }
+
+        textarea:focus {
+            outline: none;
+            border-color: var(--accent-caramel);
+        }
+
+        /* Batch Selection */
+        .batch-selector {
+            margin-top: 25px;
+        }
+
+        .batch-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 12px;
+            margin-top: 15px;
+            max-height: 200px;
+            overflow-y: auto;
+            padding-right: 5px;
+        }
+
+        .batch-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 14px;
+            background: var(--bg-color);
+            border-radius: 12px;
+            cursor: pointer;
+            border: 1px solid transparent;
+            transition: var(--transition);
+        }
+
+        .batch-item.selected {
+            border-color: var(--accent-caramel);
+            background: rgba(198, 134, 66, 0.05);
+        }
+
+        .checkbox-custom {
+            width: 20px;
+            height: 20px;
+            border: 2px solid var(--accent-caramel);
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: var(--transition);
+        }
+
+        .batch-item.selected .checkbox-custom {
+            background: var(--accent-caramel);
+        }
+
+        .checkbox-custom::after {
+            content: '✓';
+            color: white;
+            font-size: 12px;
+            display: none;
+        }
+
+        .batch-item.selected .checkbox-custom::after {
+            display: block;
+        }
+
+        .batch-info h4 {
+            font-size: 0.9rem;
+            color: var(--primary-coffee);
+        }
+
+        .batch-info p {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+        }
+
+        .btn-send {
+            width: 100%;
+            padding: 18px;
+            margin-top: 30px;
+            border: none;
+            border-radius: 16px;
+            background: var(--primary-coffee);
+            color: white;
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            transition: var(--transition);
+        }
+
+        .btn-send:hover {
+            background: var(--accent-caramel);
+            transform: translateY(-2px);
+        }
+
+        .btn-send:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        /* Success Message Overlay */
+        .success-overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(253, 251, 247, 0.95);
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            text-align: center;
+            padding: 20px;
+        }
+
+        .success-icon {
+            width: 80px;
+            height: 80px;
+            background: #E8F5E9;
+            color: #2E7D32;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 40px;
+            margin-bottom: 20px;
+        }
+
+        /* Mobile Nav Placeholder */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0; left: 0; width: 100%;
+            background: var(--card-bg);
+            display: flex;
+            justify-content: space-around;
+            padding: 15px 0;
+            box-shadow: 0 -5px 20px rgba(0,0,0,0.05);
+            z-index: 100;
+        }
+
+        .nav-item {
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 0.7rem;
+            text-align: center;
+        }
+        
+        .nav-item.active { color: var(--primary-coffee); font-weight: 600; }
+
+        .nav-item svg { width: 22px; height: 22px; display: block; margin: 0 auto 4px; }
+
+    </style>
+</head>
+<body>
+
+    <header>
+        <a href="teacher-dashboard.html" class="back-btn">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
+        </a>
+        <h1>Broadcast Notice</h1>
+    </header>
+
+    <div class="container">
+        <div class="form-card">
+            <div class="form-group">
+                <div class="label-group">
+                    <label>Notice Content</label>
+                    <span id="charCount" style="font-size: 0.75rem; color: var(--text-muted);">0 characters</span>
+                </div>
+                <textarea id="noticeText" placeholder="Write your announcement here... (Students will be notified via email)"></textarea>
+            </div>
+
+            <div class="batch-selector">
+                <div class="label-group">
+                    <label>Target Batches</label>
+                    <button id="selectAll" style="background: none; border: none; color: var(--accent-caramel); font-size: 0.8rem; font-weight: 600; cursor: pointer;">Select All</button>
+                </div>
+                
+                <div class="batch-grid" id="batchGrid">
+                    <!-- Batch items will be loaded here -->
+                    <p style="font-size: 0.85rem; color: var(--text-muted); text-align: center; padding: 20px;">No batches available. Create a batch first.</p>
+                </div>
+            </div>
+
+            <button id="sendBtn" class="btn-send" disabled>
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
+                Send Broadcast
+            </button>
+        </div>
+    </div>
+
+    <!-- Success Overlay -->
+    <div class="success-overlay" id="successOverlay">
+        <div class="success-icon">✓</div>
+        <h2 style="font-family: 'Playfair Display', serif; color: var(--primary-coffee);">Notice Sent!</h2>
+        <p style="color: var(--text-muted); margin: 10px 0 30px;">Email notifications have been triggered for selected batches.</p>
+        <button class="btn-send" style="width: auto; padding: 12px 40px;" onclick="window.location.href='teacher-dashboard.html'">Back to Home</button>
+    </div>
+
+    <!-- Bottom Nav -->
+    <div class="bottom-nav">
+        <a href="teacher-dashboard.html" class="nav-item">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+            Home
+        </a>
+        <a href="post-notice.html" class="nav-item active">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+            Notices
+        </a>
+        <a href="upload-result.html" class="nav-item">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+            Results
+        </a>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const batchGrid = document.getElementById('batchGrid');
+            const noticeText = document.getElementById('noticeText');
+            const charCount = document.getElementById('charCount');
+            const sendBtn = document.getElementById('sendBtn');
+            const selectAllBtn = document.getElementById('selectAll');
+            const successOverlay = document.getElementById('successOverlay');
+
+            // Load batches from localStorage
+            const batches = JSON.parse(localStorage.getItem('batches')) || [];
+            let selectedBatches = new Set();
+
+            if (batches.length > 0) {
+                batchGrid.innerHTML = '';
+                batches.forEach((batch, index) => {
+                    const item = document.createElement('div');
+                    item.className = 'batch-item';
+                    item.dataset.index = index;
+                    item.innerHTML = `
+                        <div class="checkbox-custom"></div>
+                        <div class="batch-info">
+                            <h4>${batch.name}</h4>
+                            <p>${batch.year} | ${batch.code}</p>
+                        </div>
+                    `;
+                    item.onclick = () => toggleBatch(item, index);
+                    batchGrid.appendChild(item);
+                });
+            }
+
+            function toggleBatch(element, index) {
+                if (selectedBatches.has(index)) {
+                    selectedBatches.delete(index);
+                    element.classList.remove('selected');
+                } else {
+                    selectedBatches.add(index);
+                    element.classList.add('selected');
+                }
+                validateForm();
+            }
+
+            selectAllBtn.onclick = () => {
+                const items = document.querySelectorAll('.batch-item');
+                if (selectedBatches.size === batches.length) {
+                    selectedBatches.clear();
+                    items.forEach(i => i.classList.remove('selected'));
+                } else {
+                    batches.forEach((_, i) => selectedBatches.add(i));
+                    items.forEach(i => i.classList.add('selected'));
+                }
+                validateForm();
+            };
+
+            noticeText.oninput = () => {
+                charCount.innerText = `${noticeText.value.length} characters`;
+                validateForm();
+            };
+
+            function validateForm() {
+                sendBtn.disabled = !(noticeText.value.trim().length > 0 && selectedBatches.size > 0);
+            }
+
+            sendBtn.onclick = () => {
+                const noticeData = {
+                    text: noticeText.value,
+                    targetBatchIndices: Array.from(selectedBatches),
+                    timestamp: new Date().toISOString()
+                };
+
+                // Save to local storage (mock database)
+                const notices = JSON.parse(localStorage.getItem('notices')) || [];
+                notices.push(noticeData);
+                localStorage.setItem('notices', JSON.stringify(notices));
+
+                // Show success message
+                successOverlay.style.display = 'flex';
+            };
+        });
+    </script>
+</body>
+</html>

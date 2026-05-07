@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Results | EduCoffee</title>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <style>
+        :root {
+            --bg-color: #FDFBF7;
+            --primary-coffee: #3E2723;
+            --accent-caramel: #C68642;
+            --text-main: #2D241E;
+            --text-muted: #7D6E64;
+            --card-bg: #FFFFFF;
+            --border-light: rgba(62, 39, 35, 0.08);
+            --shadow: 0 4px 20px rgba(62, 39, 35, 0.04);
+            --success: #2E7D32;
+            --fail: #D32F2F;
+            --transition: all 0.3s ease;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            padding-bottom: 90px;
+        }
+
+        /* Header */
+        header {
+            background: var(--card-bg);
+            padding: 16px 24px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: var(--shadow);
+            border-bottom: 1px solid var(--border-light);
+        }
+
+        .back-btn {
+            color: var(--primary-coffee);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 35px;
+            height: 35px;
+            border-radius: 10px;
+            background: var(--bg-color);
+        }
+
+        header h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.25rem;
+            color: var(--primary-coffee);
+        }
+
+        /* Main Content */
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* Chart Section */
+        .analytics-card {
+            background: var(--card-bg);
+            border-radius: 24px;
+            padding: 20px;
+            margin-bottom: 25px;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border-light);
+        }
+
+        .analytics-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .analytics-header h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.1rem;
+            color: var(--primary-coffee);
+        }
+
+        .chart-container {
+            position: relative;
+            height: 220px;
+            width: 100%;
+        }
+
+        /* Summary Card */
+        .summary-card {
+            background: var(--primary-coffee);
+            color: white;
+            padding: 20px;
+            border-radius: 24px;
+            margin-bottom: 30px;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            text-align: center;
+            gap: 10px;
+        }
+
+        .summary-item h3 {
+            font-size: 0.7rem;
+            opacity: 0.8;
+            font-weight: 400;
+            text-transform: uppercase;
+            margin-bottom: 5px;
+        }
+
+        .summary-item p {
+            font-size: 1.2rem;
+            font-weight: 700;
+        }
+
+        /* Result List */
+        .section-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.3rem;
+            margin-bottom: 15px;
+            color: var(--primary-coffee);
+        }
+
+        .result-card {
+            background: var(--card-bg);
+            border-radius: 20px;
+            padding: 16px;
+            margin-bottom: 12px;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border-light);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: var(--transition);
+        }
+
+        .result-card:hover {
+            transform: scale(1.01);
+            border-color: var(--accent-caramel);
+        }
+
+        .exam-info h4 {
+            font-size: 0.95rem;
+            color: var(--primary-coffee);
+            margin-bottom: 2px;
+        }
+
+        .exam-info p {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+        }
+
+        .score-badge {
+            text-align: right;
+        }
+
+        .score-value {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--accent-caramel);
+        }
+
+        .status-tag {
+            font-size: 0.65rem;
+            font-weight: 700;
+            padding: 3px 8px;
+            border-radius: 6px;
+            text-transform: uppercase;
+            display: inline-block;
+            margin-top: 4px;
+        }
+
+        .status-pass { background: #E8F5E9; color: var(--success); }
+        .status-fail { background: #FFEBEE; color: var(--fail); }
+
+        /* Bottom Nav */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0; left: 0; width: 100%;
+            background: var(--card-bg);
+            display: flex;
+            justify-content: space-around;
+            padding: 12px 0;
+            box-shadow: 0 -5px 25px rgba(0,0,0,0.05);
+            z-index: 1000;
+        }
+
+        .nav-item {
+            text-align: center;
+            text-decoration: none;
+            color: var(--text-muted);
+            font-size: 0.7rem;
+            flex: 1;
+        }
+
+        .nav-item.active { color: var(--primary-coffee); font-weight: 600; }
+        .nav-item svg { width: 22px; height: 22px; margin: 0 auto 4px; display: block; }
+
+        @media (max-width: 480px) {
+            .summary-item p { font-size: 1rem; }
+            .chart-container { height: 180px; }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <a href="student-dashboard.html" class="back-btn">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"></polyline></svg>
+        </a>
+        <h1>Exam Analytics</h1>
+    </header>
+
+    <main class="container">
+        
+        <!-- Performance Graph Card -->
+        <div class="analytics-card">
+            <div class="analytics-header">
+                <h3>Performance Trend</h3>
+                <div style="font-size: 0.7rem; color: var(--text-muted); font-weight: 600;">Last 6 Exams</div>
+            </div>
+            <div class="chart-container">
+                <canvas id="performanceChart"></canvas>
+            </div>
+        </div>
+
+        <!-- Summary Stats -->
+        <div class="summary-card">
+            <div class="summary-item">
+                <h3>Average</h3>
+                <p id="avgScore">78%</p>
+            </div>
+            <div class="summary-item">
+                <h3>Rank</h3>
+                <p id="studentRank">08/45</p>
+            </div>
+            <div class="summary-item">
+                <h3>Trend</h3>
+                <p id="trendStatus" style="color: #81C784;">↑ Improving</p>
+            </div>
+        </div>
+
+        <h2 class="section-title">All Results</h2>
+        
+        <div id="resultsList">
+            <!-- Results are loaded here -->
+            <div class="result-card">
+                <div class="exam-info">
+                    <h4>Final Evaluation</h4>
+                    <p>Date: 02 May 2024 | Physics B</p>
+                </div>
+                <div class="score-badge">
+                    <div class="score-value">92/100</div>
+                    <div class="status-tag status-pass">Excellent</div>
+                </div>
+            </div>
+
+            <div class="result-card">
+                <div class="exam-info">
+                    <h4>Optics Weekly Test</h4>
+                    <p>Date: 25 Apr 2024 | Physics B</p>
+                </div>
+                <div class="score-badge">
+                    <div class="score-value">45/50</div>
+                    <div class="status-tag status-pass">Pass</div>
+                </div>
+            </div>
+
+            <div class="result-card">
+                <div class="exam-info">
+                    <h4>Thermodynamics Quiz</h4>
+                    <p>Date: 18 Apr 2024 | Physics B</p>
+                </div>
+                <div class="score-badge">
+                    <div class="score-value">28/50</div>
+                    <div class="status-tag status-fail">Average</div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Bottom Navigation -->
+    <nav class="bottom-nav">
+        <a href="student-dashboard.html" class="nav-item">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+            Home
+        </a>
+        <a href="student-notices.html" class="nav-item">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+            Notices
+        </a>
+        <a href="view-results.html" class="nav-item active">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+            Results
+        </a>
+        <a href="profile-settings.html" class="nav-item">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2"/></svg>
+            Settings
+        </a>
+    </nav>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            initPerformanceChart();
+        });
+
+        function initPerformanceChart() {
+            const ctx = document.getElementById('performanceChart').getContext('2d');
+            
+            // Sample Data (Real apps would fetch this from DB)
+            const labels = ['Quiz 1', 'Test 1', 'Quiz 2', 'Monthly', 'Weekly', 'Final'];
+            const scores = [65, 72, 58, 85, 90, 92]; // Percentage scores
+
+            // Creating Gradient for the line
+            const gradient = ctx.createLinearGradient(0, 0, 0, 200);
+            gradient.addColorStop(0, 'rgba(198, 134, 66, 0.4)');
+            gradient.addColorStop(1, 'rgba(198, 134, 66, 0)');
+
+            new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Performance %',
+                        data: scores,
+                        borderColor: '#C68642',
+                        borderWidth: 3,
+                        pointBackgroundColor: '#3E2723',
+                        pointBorderColor: '#FFFFFF',
+                        pointBorderWidth: 2,
+                        pointRadius: 5,
+                        pointHoverRadius: 7,
+                        tension: 0.4, // Smooth curve
+                        fill: true,
+                        backgroundColor: gradient
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            max: 100,
+                            grid: {
+                                display: true,
+                                color: 'rgba(62, 39, 35, 0.03)'
+                            },
+                            ticks: {
+                                stepSize: 20,
+                                font: { size: 10 }
+                            }
+                        },
+                        x: {
+                            grid: { display: false },
+                            ticks: { font: { size: 10 } }
+                        }
+                    }
+                }
+            });
+        }
+    </script>
+</body>
+</html>
