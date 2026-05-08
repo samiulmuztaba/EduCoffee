@@ -5,8 +5,9 @@ from uuid import UUID
 
 class User(BaseModel):
     name: str
-    id: UUID
+    id: Optional[UUID] = None
     email: EmailStr
+    center_name: Optional[str] = None
     phone: str
     password: str
     role: Literal['teacher', 'student']
@@ -18,9 +19,10 @@ class UserLogin(BaseModel):
 
 class Batch(BaseModel):
     name: str
-    year: int = Field(min_length=4, max_length=4)
+    year: int = Field(ge=1000, le=9999)
     schedule: str
     code: str = Field(min_length=6, max_length=6)
+    teacher_id: str
 
 class StudentScore(BaseModel):
     name: str
@@ -45,6 +47,7 @@ class UserResponse(BaseModel):
     id: UUID
     name: str
     email: EmailStr
+    center_name: Optional[str] = None
     phone: str
     role: Literal['teacher', 'student']
     batch_code: Optional[str] = None
