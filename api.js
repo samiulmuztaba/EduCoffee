@@ -130,4 +130,55 @@ async function GetBatchesByTID(teacher_id) {
   }
 }
 
-GetBatchesByTID("3e71c941-110c-4300-be24-ec7f50513a1d");
+async function GetNotices() {
+  try {
+    const response = await fetch(`${api_url}/notices`, {
+      method: "GET",
+      headers: {
+        "Content-type": "application/json",
+      },
+    });
+
+    if (!response.ok) {
+      const err = await response.json();
+      throw new Error(err.detail);
+    }
+    const data = await response.json();
+    console.log(data);
+    return data;
+  } catch (err) {
+    console.log(err.message);
+  }
+}
+
+async function CreateNotice(notice) {
+  console.log(notice.text)
+  try {
+    const response = await fetch(`${api_url}/new_notice`, {
+      method: "POST",
+      headers: {
+        "Content-type": "application/json",
+      },
+      body: JSON.stringify({
+        text: notice.text,
+        teacher_id: notice.teacher_id,
+        created_at: notice.created_at
+      })
+    });
+
+    if (!response.ok) {
+      const err = await response.json();
+      throw new Error(err.detail);
+    }
+    const data = await response.json();
+    console.log(data);
+    return data;
+  } catch (err) {
+    console.log(err.message);
+  }
+}
+
+
+
+console.log(CreateNotice({text: 'Hellow guys!', teacher_id: '3e71c941-110c-4300-be24-ec7f50513a1d', created_at: new Date()}))
+

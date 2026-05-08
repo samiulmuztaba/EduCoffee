@@ -93,3 +93,16 @@ def get_all_results(db: Session = Depends(get_db)):
 @router.get('/notices', response_model=List[schemas.Notice], status_code=200)
 def get_all_results(db: Session = Depends(get_db)):
     return db.query(models.Notice).all()
+
+@router.post('/new_notice', response_model=schemas.Notice, status_code=201)
+def create_new_notice(notice: schemas.Notice, db: Session = Depends(get_db)):
+    new_notice = models.Notice(
+        text=notice.text,
+        teacher_id=notice.teacher_id,
+        created_at=notice.created_at
+    )
+
+    db.add(new_notice)
+    db.commit()
+    db.refresh(new_notice)
+    return new_notice

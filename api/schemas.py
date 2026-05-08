@@ -40,7 +40,8 @@ class Result(BaseModel):
 
 class Notice(BaseModel):
     text: str
-    batches: List[str]
+    teacher_id: str
+    batches: Optional[List[str]] = None
     created_at: datetime
 
 class UserResponse(BaseModel):
