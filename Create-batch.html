@@ -221,6 +221,7 @@
         </div>
     </div>
 
+    <script src="api.js"></script>
     <script>
         let currentBatchCode = "";
 
@@ -255,7 +256,7 @@
             });
 
             // Save Batch Listener
-            document.getElementById('saveBatchBtn').addEventListener('click', () => {
+            document.getElementById('saveBatchBtn').addEventListener('click', async () => {
                 const name = document.getElementById('batchName').value;
                 const year = document.getElementById('batchYear').value;
                 const schedule = document.getElementById('batchSchedule').value;
@@ -271,9 +272,14 @@
                     year: year,
                     schedule: schedule,
                     code: currentBatchCode,
-                    createdAt: new Date().toISOString(),
-                    allowCodeEditOnce: true // This flag allows one more edit in the dashboard/settings
+                    teacher_id: localStorage.id
                 };
+
+                console.log(name, year, schedule, currentBatchCode, localStorage.id)
+
+                const batchData = await CreateNewBatch(newBatch)
+                console.log(batchData)
+                window.location.href = 'teacher-dashboard.html'
 
                 // Save to LocalStorage
                 let batches = JSON.parse(localStorage.getItem('batches')) || [];

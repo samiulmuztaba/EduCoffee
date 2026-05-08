@@ -82,6 +82,33 @@ async function Login(email, pass) {
   }
 }
 
+async function CreateNewBatch(batch) {
+  try {
+    const response = await fetch(`${api_url}/new_batch`, {
+      method: "POST",
+      headers: {
+        "Content-type": "application/json",
+      },
+      body: JSON.stringify({
+        name: batch.name,
+        year: batch.year,
+        schedule: batch.schedule,
+        teacher_id: batch.teacher_id,
+        code: batch.code,
+      }),
+    });
+    if (!response.ok) {
+      const err = await response.json();
+      throw new Error(err.detail);
+    }
+    const data = await response.json();
+    console.log(data);
+    return data;
+  } catch (err) {
+    console.log(err.message);
+  }
+}
+
 async function GetBatchesByTID(teacher_id) {
   try {
     const response = await fetch(`${api_url}/batches/${teacher_id}`, {
@@ -103,5 +130,4 @@ async function GetBatchesByTID(teacher_id) {
   }
 }
 
-
-GetBatchesByTID('3e71c941-110c-4300-be24-ec7f50513a1d')
+GetBatchesByTID("3e71c941-110c-4300-be24-ec7f50513a1d");

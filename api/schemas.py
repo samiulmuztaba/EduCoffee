@@ -19,7 +19,7 @@ class UserLogin(BaseModel):
 
 class Batch(BaseModel):
     name: str
-    year: int = Field(ge=1000, le=9999)
+    year: str 
     schedule: str
     code: str = Field(min_length=6, max_length=6)
     teacher_id: str
