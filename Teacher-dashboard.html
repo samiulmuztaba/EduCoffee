@@ -429,8 +429,12 @@
 
         const batches = await GetBatchesByTID(teacher.id)
         console.log(batches)
+        
+        const myStudents = await GetMyStudents(teacher.id)
+        console.log(myStudents)
 
         document.getElementById('totalBatches').innerText = batches.length
+        document.getElementById('totalStudents').innerText = myStudents.length
 
         document.getElementById("teacherDisplay").innerText = teacher.name;
         document.getElementById("centerDisplay").innerText =

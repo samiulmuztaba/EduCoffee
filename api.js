@@ -132,6 +132,27 @@ async function GetBatchesByTID(teacher_id) {
 
 console.log(GetBatchesByTID('a94d1725-95cd-475e-94f5-d03756dda886'))
 
+async function GetMyStudents(teacher_id) {
+  try {
+    const response = await fetch(`${api_url}/my_students/${teacher_id}`, {
+      method: "GET",
+      headers: {
+        "Content-type": "application/json",
+      },
+    });
+
+    if (!response.ok) {
+      const err = await response.json();
+      throw new Error(err.detail);
+    }
+    const data = await response.json();
+    console.log(data);
+    return data;
+  } catch (err) {
+    console.log(err.message);
+  }
+}
+
 async function GetMyNotices(teacher_id) {
   try {
     const response = await fetch(`${api_url}/my_notices/${teacher_id}`, {
