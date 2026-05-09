@@ -202,6 +202,48 @@ async function CreateResult(result) {
   }
 }
 
+async function GetStudentResults(student_id) {
+  try {
+    const response = await fetch(`${api_url}/results/student/${student_id}`, {
+      method: "GET",
+      headers: {
+        "Content-type": "application/json",
+      },
+    });
+
+    if (!response.ok) {
+      const err = await response.json();
+      throw new Error(err.detail);
+    }
+    const data = await response.json();
+    console.log(data);
+    return data;
+  } catch (err) {
+    console.log(err.message);
+  }
+}
+
+async function GetStudentResult(student_id, result_id) {
+  try {
+    const response = await fetch(`${api_url}/results/student/${student_id}/${result_id}`, {
+      method: "GET",
+      headers: {
+        "Content-type": "application/json",
+      },
+    });
+
+    if (!response.ok) {
+      const err = await response.json();
+      throw new Error(err.detail);
+    }
+    const data = await response.json();
+    console.log(data);
+    return data;
+  } catch (err) {
+    console.log(err.message);
+  }
+}
+
 async function GetMyNotices(teacher_id) {
   try {
     const response = await fetch(`${api_url}/my_notices/${teacher_id}`, {
