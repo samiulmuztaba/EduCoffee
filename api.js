@@ -1,4 +1,4 @@
-const api_url = "https://educoffee.onrender.com";
+const api_url = "https://educoffee.onrender.com/api";
 
 async function Register(user, role) {
   try {
