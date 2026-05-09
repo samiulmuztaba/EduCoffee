@@ -1,4 +1,4 @@
-const api_url = "https://edu-coffee-qbdw.vercel.app/api";
+const api_url = "https://educoffee.onrender.com";
 
 async function Register(user, role) {
   try {
