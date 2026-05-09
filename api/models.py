@@ -44,13 +44,18 @@ class Result(Base):
     total_marks = Column(Integer)
     batch_code = Column(String, ForeignKey('batches.code'))
 
+    scores = relationship("StudentScore", back_populates="result")
+
 class StudentScore(Base):
     __tablename__ = 'student_scores'
 
     id = Column(String, primary_key=True, default=lambda: str(uuid.uuid4()))
     result_id = Column(String, ForeignKey('results.id'))
     student_id = Column(String, ForeignKey('users.id'))
+
     marks = Column(Float, nullable=True)
     remarks = Column(String, nullable=True)
     absent = Column(Boolean, default=False)
     seen_by_guardian = Column(Boolean, default=False)
+
+    result = relationship("Result", back_populates="scores")

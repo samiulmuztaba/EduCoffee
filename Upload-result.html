@@ -391,6 +391,11 @@
         const batches = await GetBatchesByTID(localStorage.id);
         const students = await GetMyStudents(localStorage.id);
 
+        if (localStorage.getItem("resultCreated") === "true") {
+          window.location.href = "teacher-dashboard.html";
+          localStorage.removeItem("resultCreated");
+        }
+
         console.log(batches, students);
 
         const targetBatch = document.getElementById("targetBatch");
@@ -416,15 +421,15 @@
           const container = document.getElementById("studentContainer");
 
           container.innerHTML = "";
-            if (studentsOfTheBatch.length == 0){
-                container.innerHTML = "<p>Please select a batch first. Make sure that batch has students</p>"
-            }
+          if (studentsOfTheBatch.length == 0) {
+            container.innerHTML =
+              "<p>Please select a batch first. Make sure that batch has students</p>";
+          }
 
           studentsOfTheBatch.forEach((student, index) => {
-            const studentId = `student_${index}`;
 
             container.innerHTML += `
-        <div class="student-item" id="${studentId}">
+        <div class="student-item" id="${student.id}" data-id=${student.id}>
             <div class="student-header">
                 <img
                     src="https://ui-avatars.com/api/?name=${encodeURIComponent(student.name)}&background=3E2723&color=fff"
@@ -453,7 +458,7 @@
                     <input
                         type="checkbox"
                         class="absent-checkbox"
-                        onchange="toggleAbsent('${studentId}', this)"
+                        onchange="toggleAbsent('${student.id}', this)"
                     />
                 </div>
             </div>
@@ -482,27 +487,67 @@
         }
       }
 
-      function publishResults() {
+      async function publishResults() {
         const title = document.getElementById("examTitle").value;
         const batch = document.getElementById("targetBatch").value;
+        const description = document.getElementById("examDesc").value;
 
         if (!title || !batch) {
           alert("Please select a batch and enter exam title.");
           return;
         }
 
-        // Logic to collect all data and save to DB
         const results = [];
+
         document.querySelectorAll(".student-item").forEach((item) => {
+          const studentId = item.id
+
+          const marks = item.querySelector(".mark-input").value;
+          const remark = item.querySelector(".remark-input").value;
+          const absent = item.querySelector(".absent-checkbox").checked;
+
           results.push({
-            id: item.id,
-            marks: item.querySelector(".mark-input").value,
-            remark: item.querySelector(".remark-input").value,
-            absent: item.querySelector(".absent-checkbox").checked,
+            student_id: studentId,
+            marks: absent || marks === "" ? null : Number(marks),
+            remarks: remark || "",
+            absent: absent,
+            seen_by_guardian: false,
           });
         });
 
-        console.log("Publishing Results:", { title, batch, results });
+        console.log("Publishing Results:", {
+          title,
+          batch_code: batch,
+          description,
+          scores: results,
+        });
+
+        const payload = {
+          title: title,
+          description: description,
+          total_marks: 100,
+          batch_code: batch,
+          scores: results,
+        };
+
+        console.log("Sending:", payload, "Scores is:", results);
+
+        try {
+          const response = await CreateResult(payload);
+
+          console.log("Success:", response);          
+          const toast = document.getElementById("toast");
+          toast.style.display = "block";
+
+          localStorage.setItem('resultCreated', 'true')
+
+          setTimeout(() => {
+            window.location.href = "teacher-dashboard.html";
+          }, 2000);
+        } catch (err) {
+          console.error("Failed to publish results:", err);
+          alert("Failed to publish results. Check console.");
+        }
 
         const toast = document.getElementById("toast");
         toast.style.display = "block";

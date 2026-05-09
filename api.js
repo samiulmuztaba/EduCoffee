@@ -130,7 +130,7 @@ async function GetBatchesByTID(teacher_id) {
   }
 }
 
-console.log(GetBatchesByTID('a94d1725-95cd-475e-94f5-d03756dda886'))
+// console.log(GetBatchesByTID('a94d1725-95cd-475e-94f5-d03756dda886'))
 
 async function GetMyStudents(teacher_id) {
   try {
@@ -179,11 +179,11 @@ async function CreateResult(result) {
     const response = await fetch(`${api_url}/new_result`, {
       method: "POST",
       headers: {
-        "Content-type": "application/json",
+        "Content-Type": "application/json",
       },
       body: JSON.stringify({
         title: result.title,
-        descritption: result.description,
+        description: result.description,
         total_marks: result.total_marks,
         batch_code: result.batch_code,
         scores: result.scores
@@ -192,15 +192,32 @@ async function CreateResult(result) {
 
     if (!response.ok) {
       const err = await response.json();
+      console.log("FASTAPI ERROR:", err);
       throw new Error(err.detail);
     }
-    const data = await response.json();
-    console.log(data);
-    return data;
+
+    return await response.json();
+
   } catch (err) {
-    console.log(err.message);
+    console.log("CLIENT ERROR:", err.message);
   }
 }
+
+// await CreateResult({
+//     title: "sdafsad",
+//     batch_code: "MLKTEA",
+//     description: "fdasdfasd",
+//     total_marks: 100,
+//     scores: [
+//         {
+//             student_id: "77342308-0427-4d1f-9f14-dbb8d913149c",
+//             marks: 23,
+//             remarks: "asdfsad",
+//             absent: false,
+//             seen_by_guardian: false
+//         }
+//     ]
+// });
 
 async function GetStudentResults(student_id) {
   try {
