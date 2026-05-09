@@ -1,4 +1,4 @@
-const api_url = "http://127.0.0.1:8000/api";
+const api_url = "https://edu-coffee-qbdw.vercel.app/api";
 
 async function Register(user, role) {
   try {
