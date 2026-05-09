@@ -129,6 +129,22 @@ def enroll_in_batch(batch_code, student_id, db: Session = Depends(get_db)):
     db.refresh(student)
 
 
+@router.get('/my_students/{teacher_id}', response_model=List[schemas.User], status_code=200)
+def get_my_students(teacher_id, db: Session = Depends(get_db)):
+    my_batches = db.query(models.Batch).filter(models.Batch.teacher_id == teacher_id)
+    my_batches_codes = []
+    for batch in my_batches:
+        my_batches_codes.append(batch.code)
+
+    students = db.query(models.User).filter(models.User.role == 'student').all()
+    my_students = []
+    for student in students:
+        for bc in student.batch_codes:
+            if bc in my_batches_codes:
+                my_students.append(student)
+    
+    return my_students
+
 @router.get("/results", response_model=List[schemas.Result], status_code=200)
 def get_all_results(db: Session = Depends(get_db)):
     return db.query(models.Result).all()
