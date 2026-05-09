@@ -153,6 +153,27 @@ async function GetMyStudents(teacher_id) {
   }
 }
 
+async function GetStudentsByBC(batch_code) {
+  try {
+    const response = await fetch(`${api_url}/students_in_batch/${batch_code}`, {
+      method: "GET",
+      headers: {
+        "Content-type": "application/json",
+      },
+    });
+
+    if (!response.ok) {
+      const err = await response.json();
+      throw new Error(err.detail);
+    }
+    const data = await response.json();
+    console.log(data);
+    return data;
+  } catch (err) {
+    console.log(err.message);
+  }
+}
+
 async function GetMyNotices(teacher_id) {
   try {
     const response = await fetch(`${api_url}/my_notices/${teacher_id}`, {

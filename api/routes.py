@@ -128,6 +128,19 @@ def enroll_in_batch(batch_code, student_id, db: Session = Depends(get_db)):
     db.commit()
     db.refresh(student)
 
+@router.get('/students_in_batch/{batch_code}', response_model=List[schemas.User], status_code=200)
+def get_students_in_batch(batch_code, db: Session = Depends(get_db)):
+    batch = db.query(models.Batch).filter(models.Batch.code == batch_code).first()
+    if not batch:
+        raise HTTPException(404, 'Batch not found')
+    
+    students = db.query(models.User).filter(models.User.role == 'student').all()
+    students_in_batch = []
+    for student in students:
+        if batch_code in student.batch_codes:
+            students_in_batch.append(student)
+
+    return students_in_batch
 
 @router.get('/my_students/{teacher_id}', response_model=List[schemas.User], status_code=200)
 def get_my_students(teacher_id, db: Session = Depends(get_db)):
@@ -201,3 +214,4 @@ def get_my_notices(teacher_id, db: Session = Depends(get_db)):
     notices = db.query(models.Notice).filter(models.Notice.teacher_id == teacher_id).all()
     
     return notices
+

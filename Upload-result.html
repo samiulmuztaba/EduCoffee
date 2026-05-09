@@ -1,383 +1,516 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Upload Results | EduCoffee</title>
     <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
-    
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Playfair+Display:wght@700&display=swap"
+      rel="stylesheet"
+    />
+
     <style>
-        :root {
-            --bg-color: #FDFBF7;
-            --primary-coffee: #3E2723;
-            --accent-caramel: #C68642;
-            --text-main: #2D241E;
-            --text-muted: #7D6E64;
-            --card-bg: #FFFFFF;
-            --border: rgba(62, 39, 35, 0.1);
-            --shadow: 0 10px 40px rgba(62, 39, 35, 0.05);
-            --transition: all 0.3s ease;
-            --danger: #D32F2F;
-        }
+      :root {
+        --bg-color: #fdfbf7;
+        --primary-coffee: #3e2723;
+        --accent-caramel: #c68642;
+        --text-main: #2d241e;
+        --text-muted: #7d6e64;
+        --card-bg: #ffffff;
+        --border: rgba(62, 39, 35, 0.1);
+        --shadow: 0 10px 40px rgba(62, 39, 35, 0.05);
+        --transition: all 0.3s ease;
+        --danger: #d32f2f;
+      }
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            -webkit-tap-highlight-color: transparent;
-        }
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        -webkit-tap-highlight-color: transparent;
+      }
 
-        body {
-            font-family: 'Inter', sans-serif;
-            background-color: var(--bg-color);
-            color: var(--text-main);
-            padding-bottom: 50px;
-        }
+      body {
+        font-family: "Inter", sans-serif;
+        background-color: var(--bg-color);
+        color: var(--text-main);
+        padding-bottom: 50px;
+      }
 
-        header {
-            background: var(--card-bg);
-            padding: 16px 24px;
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            position: sticky;
-            top: 0;
-            z-index: 1000;
-            box-shadow: var(--shadow);
-        }
+      header {
+        background: var(--card-bg);
+        padding: 16px 24px;
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        position: sticky;
+        top: 0;
+        z-index: 1000;
+        box-shadow: var(--shadow);
+      }
 
-        .back-btn {
-            color: var(--primary-coffee);
-            text-decoration: none;
-            display: flex;
-            align-items: center;
-        }
+      .back-btn {
+        color: var(--primary-coffee);
+        text-decoration: none;
+        display: flex;
+        align-items: center;
+      }
 
-        header h1 {
-            font-family: 'Playfair Display', serif;
-            font-size: 1.2rem;
-            color: var(--primary-coffee);
-        }
+      header h1 {
+        font-family: "Playfair Display", serif;
+        font-size: 1.2rem;
+        color: var(--primary-coffee);
+      }
 
-        .container {
-            max-width: 800px;
-            margin: 20px auto;
-            padding: 0 20px;
-        }
+      .container {
+        max-width: 800px;
+        margin: 20px auto;
+        padding: 0 20px;
+      }
 
-        .config-card, .student-list-card {
-            background: var(--card-bg);
-            border-radius: 24px;
-            padding: 24px;
-            box-shadow: var(--shadow);
-            border: 1px solid var(--border);
-            margin-bottom: 25px;
-        }
+      .config-card,
+      .student-list-card {
+        background: var(--card-bg);
+        border-radius: 24px;
+        padding: 24px;
+        box-shadow: var(--shadow);
+        border: 1px solid var(--border);
+        margin-bottom: 25px;
+      }
 
-        .section-title {
-            font-family: 'Playfair Display', serif;
-            font-size: 1.1rem;
-            margin-bottom: 20px;
-            color: var(--primary-coffee);
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
+      .section-title {
+        font-family: "Playfair Display", serif;
+        font-size: 1.1rem;
+        margin-bottom: 20px;
+        color: var(--primary-coffee);
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
 
-        .form-group { margin-bottom: 15px; }
+      .form-group {
+        margin-bottom: 15px;
+      }
 
-        label {
-            display: block;
-            font-size: 0.85rem;
-            font-weight: 600;
-            margin-bottom: 6px;
-            color: var(--text-muted);
-        }
+      label {
+        display: block;
+        font-size: 0.85rem;
+        font-weight: 600;
+        margin-bottom: 6px;
+        color: var(--text-muted);
+      }
 
-        input, select, textarea {
-            width: 100%;
-            padding: 12px 16px;
-            border-radius: 12px;
-            border: 1px solid var(--border);
-            background: var(--bg-color);
-            font-family: inherit;
-            font-size: 0.95rem;
-            transition: var(--transition);
-        }
+      input,
+      select,
+      textarea {
+        width: 100%;
+        padding: 12px 16px;
+        border-radius: 12px;
+        border: 1px solid var(--border);
+        background: var(--bg-color);
+        font-family: inherit;
+        font-size: 0.95rem;
+        transition: var(--transition);
+      }
 
-        textarea { resize: vertical; min-height: 80px; }
+      textarea {
+        resize: vertical;
+        min-height: 80px;
+      }
 
-        input:focus, select:focus, textarea:focus {
-            outline: none;
-            border-color: var(--accent-caramel);
-            background: #fff;
-        }
+      input:focus,
+      select:focus,
+      textarea:focus {
+        outline: none;
+        border-color: var(--accent-caramel);
+        background: #fff;
+      }
 
-        /* Student Item Styling */
-        .student-item {
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-            padding: 20px;
-            border-bottom: 1px solid var(--border);
-            transition: var(--transition);
-        }
+      /* Student Item Styling */
+      .student-item {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        padding: 20px;
+        border-bottom: 1px solid var(--border);
+        transition: var(--transition);
+      }
 
-        .student-item:last-child { border-bottom: none; }
+      .student-item:last-child {
+        border-bottom: none;
+      }
 
-        .student-header {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
+      .student-header {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+      }
 
-        .student-img {
-            width: 45px;
-            height: 45px;
-            border-radius: 12px;
-            object-fit: cover;
-            background: #eee;
-        }
+      .student-img {
+        width: 45px;
+        height: 45px;
+        border-radius: 12px;
+        object-fit: cover;
+        background: #eee;
+      }
 
-        .student-info h4 {
-            font-size: 0.95rem;
-            color: var(--primary-coffee);
-        }
+      .student-info h4 {
+        font-size: 0.95rem;
+        color: var(--primary-coffee);
+      }
 
-        .student-info p {
-            font-size: 0.75rem;
-            color: var(--text-muted);
-        }
+      .student-info p {
+        font-size: 0.75rem;
+        color: var(--text-muted);
+      }
 
+      .inputs-row {
+        display: grid;
+        grid-template-columns: 100px 1fr 100px;
+        gap: 10px;
+        align-items: start;
+      }
+
+      .absent-toggle {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        font-size: 0.7rem;
+        font-weight: 700;
+        color: var(--text-muted);
+        cursor: pointer;
+        gap: 5px;
+      }
+
+      .absent-checkbox {
+        width: 20px;
+        height: 20px;
+      }
+
+      .is-absent {
+        opacity: 0.5;
+        pointer-events: none;
+      }
+
+      .is-absent-active {
+        pointer-events: all !important;
+        opacity: 1 !important;
+      }
+
+      .btn-publish {
+        width: 100%;
+        padding: 16px;
+        border: none;
+        border-radius: 16px;
+        background: var(--primary-coffee);
+        color: white;
+        font-weight: 600;
+        font-size: 1rem;
+        cursor: pointer;
+        transition: var(--transition);
+        margin-top: 10px;
+      }
+
+      .btn-publish:hover {
+        background: var(--accent-caramel);
+        transform: translateY(-2px);
+      }
+
+      @media (max-width: 600px) {
         .inputs-row {
-            display: grid;
-            grid-template-columns: 100px 1fr 100px;
-            gap: 10px;
-            align-items: start;
+          grid-template-columns: 1fr;
         }
-
         .absent-toggle {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            font-size: 0.7rem;
-            font-weight: 700;
-            color: var(--text-muted);
-            cursor: pointer;
-            gap: 5px;
+          flex-direction: row;
+          justify-content: flex-start;
+          padding-top: 5px;
         }
+      }
 
-        .absent-checkbox {
-            width: 20px;
-            height: 20px;
-        }
-
-        .is-absent {
-            opacity: 0.5;
-            pointer-events: none;
-        }
-
-        .is-absent-active {
-            pointer-events: all !important;
-            opacity: 1 !important;
-        }
-
-        .btn-publish {
-            width: 100%;
-            padding: 16px;
-            border: none;
-            border-radius: 16px;
-            background: var(--primary-coffee);
-            color: white;
-            font-weight: 600;
-            font-size: 1rem;
-            cursor: pointer;
-            transition: var(--transition);
-            margin-top: 10px;
-        }
-
-        .btn-publish:hover {
-            background: var(--accent-caramel);
-            transform: translateY(-2px);
-        }
-
-        @media (max-width: 600px) {
-            .inputs-row {
-                grid-template-columns: 1fr;
-            }
-            .absent-toggle {
-                flex-direction: row;
-                justify-content: flex-start;
-                padding-top: 5px;
-            }
-        }
-
-        .toast {
-            position: fixed;
-            bottom: 20px;
-            left: 50%;
-            transform: translateX(-50%);
-            background: #2D241E;
-            color: white;
-            padding: 12px 24px;
-            border-radius: 50px;
-            display: none;
-            z-index: 2000;
-        }
+      .toast {
+        position: fixed;
+        bottom: 20px;
+        left: 50%;
+        transform: translateX(-50%);
+        background: #2d241e;
+        color: white;
+        padding: 12px 24px;
+        border-radius: 50px;
+        display: none;
+        z-index: 2000;
+      }
     </style>
-</head>
-<body>
-
+  </head>
+  <body>
     <header>
-        <a href="teacher-dashboard.html" class="back-btn">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"></polyline></svg>
-        </a>
-        <h1>Upload Exam Results</h1>
+      <a href="teacher-dashboard.html" class="back-btn">
+        <svg
+          width="24"
+          height="24"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2.5"
+        >
+          <polyline points="15 18 9 12 15 6"></polyline>
+        </svg>
+      </a>
+      <h1>Upload Exam Results</h1>
     </header>
 
     <main class="container">
-        <!-- Exam Config -->
-        <div class="config-card">
-            <div class="section-title">Exam Details</div>
-            
-            <div class="form-group">
-                <label>Select Batch</label>
-                <select id="targetBatch">
-                    <option value="">Choose a batch...</option>
-                    <option value="b1">Physics SSC 2025 (A)</option>
-                    <option value="b2">Physics HSC 2026 (B)</option>
-                </select>
-            </div>
+      <!-- Exam Config -->
+      <div class="config-card">
+        <div class="section-title">Exam Details</div>
 
-            <div class="form-group">
-                <label>Exam Title</label>
-                <input type="text" id="examTitle" placeholder="e.g. Weekly Quiz 05: Optics">
-            </div>
-
-            <div class="form-group">
-                <label>Exam Description (Optional)</label>
-                <textarea id="examDesc" placeholder="Provide details about the exam syllabus or performance summary..."></textarea>
-            </div>
-
-            <div class="form-group">
-                <label>Total Marks</label>
-                <input type="number" id="totalMarks" value="50">
-            </div>
+        <div class="form-group">
+          <label>Select Batch</label>
+          <select id="targetBatch">
+            <option value="">Choose a batch...</option>
+            <option value="b1">Physics SSC 2025 (A)</option>
+            <option value="b2">Physics HSC 2026 (B)</option>
+          </select>
         </div>
 
-        <!-- Student List -->
-        <div class="student-list-card">
-            <div class="section-title">Student Scoring</div>
-            
-            <div id="studentContainer">
-                <!-- Example Student 1 -->
-                <div class="student-item" id="student_101">
-                    <div class="student-header">
-                        <img src="https://ui-avatars.com/api/?name=Ariful+Islam&background=3E2723&color=fff" class="student-img" alt="Student">
-                        <div class="student-info">
-                            <h4>Ariful Islam</h4>
-                            <p>ID: #202501</p>
-                        </div>
-                    </div>
-                    <div class="inputs-row">
-                        <div class="form-group">
-                            <label>Marks</label>
-                            <input type="number" class="mark-input" placeholder="00">
-                        </div>
-                        <div class="form-group">
-                            <label>Remarks for Parent/Student</label>
-                            <input type="text" class="remark-input" placeholder="e.g. Excellent work!">
-                        </div>
-                        <div class="absent-toggle">
-                            <label>Absent</label>
-                            <input type="checkbox" class="absent-checkbox" onchange="toggleAbsent('student_101', this)">
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Example Student 2 -->
-                <div class="student-item" id="student_102">
-                    <div class="student-header">
-                        <img src="https://ui-avatars.com/api/?name=Sara+Ahmed&background=C68642&color=fff" class="student-img" alt="Student">
-                        <div class="student-info">
-                            <h4>Sara Ahmed</h4>
-                            <p>ID: #202505</p>
-                        </div>
-                    </div>
-                    <div class="inputs-row">
-                        <div class="form-group">
-                            <label>Marks</label>
-                            <input type="number" class="mark-input" placeholder="00">
-                        </div>
-                        <div class="form-group">
-                            <label>Remarks for Parent/Student</label>
-                            <input type="text" class="remark-input" placeholder="e.g. Focus on theory.">
-                        </div>
-                        <div class="absent-toggle">
-                            <label>Absent</label>
-                            <input type="checkbox" class="absent-checkbox" onchange="toggleAbsent('student_102', this)">
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <button class="btn-publish" onclick="publishResults()">Publish Results</button>
+        <div class="form-group">
+          <label>Exam Title</label>
+          <input
+            type="text"
+            id="examTitle"
+            placeholder="e.g. Weekly Quiz 05: Optics"
+          />
         </div>
+
+        <div class="form-group">
+          <label>Exam Description (Optional)</label>
+          <textarea
+            id="examDesc"
+            placeholder="Provide details about the exam syllabus or performance summary..."
+          ></textarea>
+        </div>
+
+        <div class="form-group">
+          <label>Total Marks</label>
+          <input type="number" id="totalMarks" value="50" />
+        </div>
+      </div>
+
+      <!-- Student List -->
+      <div class="student-list-card">
+        <div class="section-title">Student Scoring</div>
+
+        <div id="studentContainer">
+          <!-- Example Student 1 -->
+          <div class="student-item" id="student_101">
+            <div class="student-header">
+              <img
+                src="https://ui-avatars.com/api/?name=Ariful+Islam&background=3E2723&color=fff"
+                class="student-img"
+                alt="Student"
+              />
+              <div class="student-info">
+                <h4>Ariful Islam</h4>
+                <p>ID: #202501</p>
+              </div>
+            </div>
+            <div class="inputs-row">
+              <div class="form-group">
+                <label>Marks</label>
+                <input type="number" class="mark-input" placeholder="00" />
+              </div>
+              <div class="form-group">
+                <label>Remarks for Parent/Student</label>
+                <input
+                  type="text"
+                  class="remark-input"
+                  placeholder="e.g. Excellent work!"
+                />
+              </div>
+              <div class="absent-toggle">
+                <label>Absent</label>
+                <input
+                  type="checkbox"
+                  class="absent-checkbox"
+                  onchange="toggleAbsent('student_101', this)"
+                />
+              </div>
+            </div>
+          </div>
+
+          <!-- Example Student 2 -->
+          <div class="student-item" id="student_102">
+            <div class="student-header">
+              <img
+                src="https://ui-avatars.com/api/?name=Sara+Ahmed&background=C68642&color=fff"
+                class="student-img"
+                alt="Student"
+              />
+              <div class="student-info">
+                <h4>Sara Ahmed</h4>
+                <p>ID: #202505</p>
+              </div>
+            </div>
+            <div class="inputs-row">
+              <div class="form-group">
+                <label>Marks</label>
+                <input type="number" class="mark-input" placeholder="00" />
+              </div>
+              <div class="form-group">
+                <label>Remarks for Parent/Student</label>
+                <input
+                  type="text"
+                  class="remark-input"
+                  placeholder="e.g. Focus on theory."
+                />
+              </div>
+              <div class="absent-toggle">
+                <label>Absent</label>
+                <input
+                  type="checkbox"
+                  class="absent-checkbox"
+                  onchange="toggleAbsent('student_102', this)"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <button class="btn-publish" onclick="publishResults()">
+          Publish Results
+        </button>
+      </div>
     </main>
 
     <div id="toast" class="toast">Results published successfully!</div>
 
+    <script src="api.js"></script>
     <script>
-        function toggleAbsent(studentId, checkbox) {
-            const row = document.getElementById(studentId);
-            const markInput = row.querySelector('.mark-input');
-            const remarkInput = row.querySelector('.remark-input');
+      document.addEventListener("DOMContentLoaded", async () => {
+        const batches = await GetBatchesByTID(localStorage.id);
+        const students = await GetMyStudents(localStorage.id);
 
-            if (checkbox.checked) {
-                markInput.value = "";
-                markInput.disabled = true;
-                markInput.placeholder = "ABS";
-                remarkInput.value = "Student was absent.";
-                row.style.background = "#fffafa";
-            } else {
-                markInput.disabled = false;
-                markInput.placeholder = "00";
-                remarkInput.value = "";
-                row.style.background = "transparent";
+        console.log(batches, students);
+
+        const targetBatch = document.getElementById("targetBatch");
+
+        targetBatch.innerHTML = `
+            <option value="">Choose a batch...</option>
+        `;
+
+        batches.forEach((batch) => {
+          targetBatch.innerHTML += `
+        <option value="${batch.code}">
+            ${batch.name} (${batch.year})
+        </option>
+        `;
+        });
+
+        let studentsOfTheBatch = [];
+
+        targetBatch.addEventListener("change", async () => {
+          studentsOfTheBatch = await GetStudentsByBC(targetBatch.value);
+          console.log(studentsOfTheBatch);
+
+          const container = document.getElementById("studentContainer");
+
+          container.innerHTML = "";
+            if (studentsOfTheBatch.length == 0){
+                container.innerHTML = "<p>Please select a batch first. Make sure that batch has students</p>"
             }
+
+          studentsOfTheBatch.forEach((student, index) => {
+            const studentId = `student_${index}`;
+
+            container.innerHTML += `
+        <div class="student-item" id="${studentId}">
+            <div class="student-header">
+                <img
+                    src="https://ui-avatars.com/api/?name=${encodeURIComponent(student.name)}&background=3E2723&color=fff"
+                    class="student-img"
+                    alt="Student"
+                />
+                <div class="student-info">
+                    <h4>${student.name}</h4>
+                    <p>ID: #${student.id.slice(0, 6)}</p>
+                </div>
+            </div>
+
+            <div class="inputs-row">
+                <div class="form-group">
+                    <label>Marks</label>
+                    <input type="number" class="mark-input" placeholder="00" />
+                </div>
+
+                <div class="form-group">
+                    <label>Remarks for Parent/Student</label>
+                    <input type="text" class="remark-input" placeholder="e.g. Good work!" />
+                </div>
+
+                <div class="absent-toggle">
+                    <label>Absent</label>
+                    <input
+                        type="checkbox"
+                        class="absent-checkbox"
+                        onchange="toggleAbsent('${studentId}', this)"
+                    />
+                </div>
+            </div>
+        </div>
+    `;
+          });
+        });
+      });
+
+      function toggleAbsent(studentId, checkbox) {
+        const row = document.getElementById(studentId);
+        const markInput = row.querySelector(".mark-input");
+        const remarkInput = row.querySelector(".remark-input");
+
+        if (checkbox.checked) {
+          markInput.value = "";
+          markInput.disabled = true;
+          markInput.placeholder = "ABS";
+          remarkInput.value = "Student was absent.";
+          row.style.background = "#fffafa";
+        } else {
+          markInput.disabled = false;
+          markInput.placeholder = "00";
+          remarkInput.value = "";
+          row.style.background = "transparent";
+        }
+      }
+
+      function publishResults() {
+        const title = document.getElementById("examTitle").value;
+        const batch = document.getElementById("targetBatch").value;
+
+        if (!title || !batch) {
+          alert("Please select a batch and enter exam title.");
+          return;
         }
 
-        function publishResults() {
-            const title = document.getElementById('examTitle').value;
-            const batch = document.getElementById('targetBatch').value;
-            
-            if(!title || !batch) {
-                alert("Please select a batch and enter exam title.");
-                return;
-            }
+        // Logic to collect all data and save to DB
+        const results = [];
+        document.querySelectorAll(".student-item").forEach((item) => {
+          results.push({
+            id: item.id,
+            marks: item.querySelector(".mark-input").value,
+            remark: item.querySelector(".remark-input").value,
+            absent: item.querySelector(".absent-checkbox").checked,
+          });
+        });
 
-            // Logic to collect all data and save to DB
-            const results = [];
-            document.querySelectorAll('.student-item').forEach(item => {
-                results.push({
-                    id: item.id,
-                    marks: item.querySelector('.mark-input').value,
-                    remark: item.querySelector('.remark-input').value,
-                    absent: item.querySelector('.absent-checkbox').checked
-                });
-            });
+        console.log("Publishing Results:", { title, batch, results });
 
-            console.log("Publishing Results:", { title, batch, results });
+        const toast = document.getElementById("toast");
+        toast.style.display = "block";
 
-            const toast = document.getElementById('toast');
-            toast.style.display = 'block';
-            
-            setTimeout(() => {
-                window.location.href = 'teacher-dashboard.html';
-            }, 2000);
-        }
+        setTimeout(() => {
+          window.location.href = "teacher-dashboard.html";
+        }, 2000);
+      }
     </script>
-</body>
+  </body>
 </html>
