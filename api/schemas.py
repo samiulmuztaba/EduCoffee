@@ -25,7 +25,7 @@ class Batch(BaseModel):
     teacher_id: str
 
 class StudentScore(BaseModel):
-    name: str
+    student_id: str
     marks: Optional[float] = None
     remarks: Optional[str] = ''
     absent: bool

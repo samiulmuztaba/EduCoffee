@@ -162,6 +162,50 @@ def get_my_students(teacher_id, db: Session = Depends(get_db)):
 def get_all_results(db: Session = Depends(get_db)):
     return db.query(models.Result).all()
 
+@router.post('/new_result', status_code=201)
+def create_result(result: schemas.Result, db: Session = Depends(get_db)):
+    batch = db.query(models.Batch).filter(models.Batch.code == result.batch_code).first()
+    if not batch:
+        raise HTTPException(404, 'Batch not found')
+
+    new_result = models.Result(
+        title=result.title,
+        description=result.description,
+        total_marks=result.total_marks,
+        batch_code=result.batch_code
+    )
+    db.add(new_result)
+    db.flush()
+
+    for score in result.scores:
+        db.add(models.StudentScore(
+            result_id=new_result.id,
+            student_id=score.student_id,
+            marks=score.marks,
+            remarks=score.remarks,
+            absent=score.absent,
+            seen_by_guardian=score.seen_by_guardian
+        ))
+
+    db.commit()
+    return {'message': 'Results published successfully'}
+
+@router.get('/results/student/{student_id}', status_code=200)
+def get_student_results(student_id: str, db: Session = Depends(get_db)):
+    scores = db.query(models.StudentScore).filter(models.StudentScore.student_id == student_id).all()
+    if not scores:
+        raise HTTPException(404, 'No results found')
+    return scores
+
+@router.get('/results/student/{student_id}/{result_id}', status_code=200)
+def get_student_result(student_id: str, result_id: str, db: Session = Depends(get_db)):
+    score = db.query(models.StudentScore).filter(
+        models.StudentScore.student_id == student_id,
+        models.StudentScore.result_id == result_id
+    ).first()
+    if not score:
+        raise HTTPException(404, 'Result not found')
+    return score
 
 @router.get("/notices", response_model=List[schemas.Notice], status_code=200)
 def get_all_notices(db: Session = Depends(get_db)):

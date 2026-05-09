@@ -174,6 +174,34 @@ async function GetStudentsByBC(batch_code) {
   }
 }
 
+async function CreateResult(result) {
+  try {
+    const response = await fetch(`${api_url}/new_result`, {
+      method: "POST",
+      headers: {
+        "Content-type": "application/json",
+      },
+      body: JSON.stringify({
+        title: result.title,
+        descritption: result.description,
+        total_marks: result.total_marks,
+        batch_code: result.batch_code,
+        scores: result.scores
+      })
+    });
+
+    if (!response.ok) {
+      const err = await response.json();
+      throw new Error(err.detail);
+    }
+    const data = await response.json();
+    console.log(data);
+    return data;
+  } catch (err) {
+    console.log(err.message);
+  }
+}
+
 async function GetMyNotices(teacher_id) {
   try {
     const response = await fetch(`${api_url}/my_notices/${teacher_id}`, {
