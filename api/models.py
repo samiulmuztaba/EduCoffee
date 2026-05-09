@@ -1,8 +1,9 @@
-from sqlalchemy import Column, String, Enum, Float, Boolean, DateTime, Integer, ForeignKey
+from sqlalchemy import Column, String, Enum, Float, Boolean, DateTime, Integer, ForeignKey, JSON
 from sqlalchemy.orm import relationship
 from database import Base
 import uuid
 from datetime import datetime
+# from typing import List
 
 class User(Base):
     __tablename__ = 'users'
@@ -14,7 +15,7 @@ class User(Base):
     phone = Column(String)
     password = Column(String)
     role = Column(Enum('teacher', 'student'))
-    batch_code = Column(String, ForeignKey('batches.code'), nullable=True)
+    batch_codes = Column(JSON, nullable=True)
 
 class Batch(Base):
     __tablename__ = 'batches'
@@ -32,13 +33,7 @@ class Notice(Base):
     text = Column(String)
     teacher_id = Column(String, ForeignKey('users.id'))
     created_at = Column(DateTime, default=datetime.utcnow)
-
-class NoticeBatch(Base):
-    __tablename__ = 'notice_batches'
-
-    id = Column(String, primary_key=True, default=lambda: str(uuid.uuid4()))
-    notice_id = Column(String, ForeignKey('notices.id'))
-    batch_code = Column(String, ForeignKey('batches.code'))
+    batch_codes = Column(JSON)
 
 class Result(Base):
     __tablename__ = 'results'

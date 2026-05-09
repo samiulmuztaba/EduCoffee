@@ -14,7 +14,7 @@ async function Register(user, role) {
         phone: user.phone,
         center_name: user.center_name,
         role: role,
-        batch_code: user.batch_code,
+        batch_codes: user.batch_codes,
       }),
     });
 
@@ -162,6 +162,7 @@ async function CreateNotice(notice) {
       body: JSON.stringify({
         text: notice.text,
         teacher_id: notice.teacher_id,
+        batch_codes: notice.batch_codes,
         created_at: notice.created_at
       })
     });
@@ -180,5 +181,5 @@ async function CreateNotice(notice) {
 
 
 
-console.log(CreateNotice({text: 'Hellow guys!', teacher_id: '3e71c941-110c-4300-be24-ec7f50513a1d', created_at: new Date()}))
+console.log(CreateNotice({text: 'Hellow guys!', batch_codes: ['94EX3P', 'VAB6MS'], teacher_id: '3e71c941-110c-4300-be24-ec7f50513a1d', created_at: new Date()}))
 

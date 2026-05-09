@@ -11,7 +11,7 @@ class User(BaseModel):
     phone: str
     password: str
     role: Literal['teacher', 'student']
-    batch_code: Optional[str] = None
+    batch_codes: Optional[List] = None
 
 class UserLogin(BaseModel):
     email: EmailStr
@@ -41,7 +41,7 @@ class Result(BaseModel):
 class Notice(BaseModel):
     text: str
     teacher_id: str
-    batches: Optional[List[str]] = None
+    batch_codes: List[str]
     created_at: datetime
 
 class UserResponse(BaseModel):
@@ -51,7 +51,7 @@ class UserResponse(BaseModel):
     center_name: Optional[str] = None
     phone: str
     role: Literal['teacher', 'student']
-    batch_code: Optional[str] = None
+    batch_codes: Optional[List] = None
 
     class Config:
         from_attributes = True
