@@ -505,10 +505,13 @@
 
         try {
           studentData = await GetUserByID(localStorage.id);
+          notices = await GetNoticesForStudent(studentData.id)
+          
         } catch(err) {
-            console.log('in the catch blok...')
             window.location.href = 'index.html'
         }
+
+
 
         document.getElementById("studentName").innerText =
           `Hello, ${studentData.name}!`;

@@ -130,9 +130,11 @@ async function GetBatchesByTID(teacher_id) {
   }
 }
 
-async function GetMyNotices() {
+console.log(GetBatchesByTID('a94d1725-95cd-475e-94f5-d03756dda886'))
+
+async function GetMyNotices(teacher_id) {
   try {
-    const response = await fetch(`${api_url}/notices`, {
+    const response = await fetch(`${api_url}/my_notices/${teacher_id}`, {
       method: "GET",
       headers: {
         "Content-type": "application/json",
@@ -163,7 +165,6 @@ async function CreateNotice(notice) {
         text: notice.text,
         teacher_id: notice.teacher_id,
         batch_codes: notice.batch_codes,
-        created_at: notice.created_at
       })
     });
 
@@ -179,7 +180,23 @@ async function CreateNotice(notice) {
   }
 }
 
+async function GetNoticesForStudent(student_id) {
+  try {
+    const response = await fetch(`${api_url}/notices/${student_id}`, {
+      method: "GET",
+      headers: {
+        "Content-type": "application/json",
+      },
+    });
 
-
-console.log(CreateNotice({text: 'Hellow guys!', batch_codes: ['94EX3P', 'VAB6MS'], teacher_id: '3e71c941-110c-4300-be24-ec7f50513a1d', created_at: new Date()}))
-
+    if (!response.ok) {
+      const err = await response.json();
+      throw new Error(err.detail);
+    }
+    const data = await response.json();
+    console.log(data);
+    return data;
+  } catch (err) {
+    console.log(err.message);
+  }
+}

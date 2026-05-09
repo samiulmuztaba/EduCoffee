@@ -42,7 +42,7 @@ class Notice(BaseModel):
     text: str
     teacher_id: str
     batch_codes: List[str]
-    created_at: datetime
+    created_at: Optional[datetime] = None
 
 class UserResponse(BaseModel):
     id: UUID
