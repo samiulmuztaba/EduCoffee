@@ -130,7 +130,7 @@ async function GetBatchesByTID(teacher_id) {
   }
 }
 
-async function GetNotices() {
+async function GetMyNotices() {
   try {
     const response = await fetch(`${api_url}/notices`, {
       method: "GET",

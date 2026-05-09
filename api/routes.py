@@ -172,3 +172,16 @@ def create_new_notice(notice: schemas.Notice, db: Session = Depends(get_db)):
     db.commit()
     db.refresh(new_notice)
     return new_notice
+
+@router.get('/my_notices/{teacher_id}', response_model=List[schemas.Notice], status_code=200)
+def get_my_notices(teacher_id, db: Session = Depends(get_db)):
+    teacher = db.query(models.User).filter(models.User.id == teacher_id).first()
+    if not teacher:
+        raise HTTPException(404, "Teacher Not Found")
+
+    if teacher.role != 'teacher':
+        raise HTTPException(403, 'Not for students.')
+
+    notices = db.query(models.Notice).filter(models.Notice.teacher_id == teacher_id).all()
+    
+    return notices
