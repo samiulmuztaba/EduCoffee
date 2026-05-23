@@ -642,7 +642,7 @@ const API = 'http://127.0.0.1:8000/api';
 const studentId = localStorage.getItem('current_userid') || localStorage.getItem('userId');
 const studentName = localStorage.getItem('current_user_name') || localStorage.getItem('userName') || 'Student';
 
-if (!studentId) { window.location.href = 'auth.html'; }
+// if (!studentId) { window.location.href = 'auth.html'; }
 
 // ── SIDEBAR USER ──
 async function getUser(){
