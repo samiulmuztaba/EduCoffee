@@ -1,5 +1,5 @@
-// const api_url = "https://educoffee.onrender.com/api";
-const api_url = "http://127.0.0.1:8000/api";
+const api_url = "https://educoffee.onrender.com/api";
+// const api_url = "http://127.0.0.1:8000/api";
 
 async function Register(data) {
   try {
