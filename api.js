@@ -1,6 +1,7 @@
-const api_url = "https://educoffee.onrender.com/api";
+// const api_url = "https://educoffee.onrender.com/api";
+const api_url = "http://127.0.0.1:8000/api";
 
-async function Register(user, role) {
+async function Register(data) {
   try {
     const response = await fetch(`${api_url}/register`, {
       method: "POST",
@@ -8,13 +9,14 @@ async function Register(user, role) {
         "Content-type": "application/json",
       },
       body: JSON.stringify({
-        name: user.name,
-        email: user.email,
-        password: user.password,
-        phone: user.phone,
-        center_name: user.center_name,
-        role: role,
-        batch_codes: user.batch_codes,
+        name: data.name,
+        email: data.email,
+        password: data.password,
+        phone: data.phone,
+        center_name: data.center_name,
+        role: data.role,
+        batch_codes: data.batch_codes,
+        plan: data.plan
       }),
     });
 
@@ -23,11 +25,12 @@ async function Register(user, role) {
       throw new Error(err.detail);
     }
 
-    const data = await response.json();
-    console.log(data);
-    return data;
+    const result = await response.json();
+    console.log(result);
+    return result;
   } catch (error) {
     console.log(error.message);
+    throw error;
   }
 }
 
@@ -50,8 +53,7 @@ async function GetUserByID(id) {
     return data;
   } catch (error) {
     console.log(error.message);
-    window.location.href = "index.html";
-    alert(error.message);
+    throw error;
   }
 }
 
@@ -74,11 +76,9 @@ async function Login(email, pass) {
     const data = await response.json();
     console.log(data);
     return data;
-  } catch {
-    err;
-  }
-  {
+  } catch (err) {
     console.log(err.message);
+    throw err;
   }
 }
 
@@ -106,6 +106,52 @@ async function CreateNewBatch(batch) {
     return data;
   } catch (err) {
     console.log(err.message);
+    throw err;
+  }
+}
+
+async function UpdateBatch(code, batch) {
+  try {
+    const response = await fetch(`${api_url}/batch/${code}`, {
+      method: "PUT",
+      headers: {
+        "Content-type": "application/json",
+      },
+      body: JSON.stringify({
+        name: batch.name,
+        year: batch.year,
+        schedule: batch.schedule,
+      }),
+    });
+    if (!response.ok) {
+      const err = await response.json();
+      throw new Error(err.detail);
+    }
+    const data = await response.json();
+    console.log(data);
+    return data;
+  } catch (err) {
+    console.log(err.message);
+    throw err;
+  }
+}
+
+async function DeleteBatch(code) {
+  try {
+    const response = await fetch(`${api_url}/batch/${code}`, {
+      method: "DELETE",
+      headers: {
+        "Content-type": "application/json",
+      },
+    });
+    if (!response.ok) {
+      const err = await response.json();
+      throw new Error(err.detail);
+    }
+    return true;
+  } catch (err) {
+    console.log(err.message);
+    throw err;
   }
 }
 
@@ -127,10 +173,9 @@ async function GetBatchesByTID(teacher_id) {
     return data;
   } catch (err) {
     console.log(err.message);
+    throw err;
   }
 }
-
-// console.log(GetBatchesByTID('a94d1725-95cd-475e-94f5-d03756dda886'))
 
 async function GetMyStudents(teacher_id) {
   try {
@@ -150,6 +195,7 @@ async function GetMyStudents(teacher_id) {
     return data;
   } catch (err) {
     console.log(err.message);
+    throw err;
   }
 }
 
@@ -171,6 +217,7 @@ async function GetStudentsByBC(batch_code) {
     return data;
   } catch (err) {
     console.log(err.message);
+    throw err;
   }
 }
 
@@ -200,24 +247,9 @@ async function CreateResult(result) {
 
   } catch (err) {
     console.log("CLIENT ERROR:", err.message);
+    throw err;
   }
 }
-
-// await CreateResult({
-//     title: "sdafsad",
-//     batch_code: "MLKTEA",
-//     description: "fdasdfasd",
-//     total_marks: 100,
-//     scores: [
-//         {
-//             student_id: "77342308-0427-4d1f-9f14-dbb8d913149c",
-//             marks: 23,
-//             remarks: "asdfsad",
-//             absent: false,
-//             seen_by_guardian: false
-//         }
-//     ]
-// });
 
 async function GetStudentResults(student_id) {
   try {
@@ -237,6 +269,7 @@ async function GetStudentResults(student_id) {
     return data;
   } catch (err) {
     console.log(err.message);
+    throw err;
   }
 }
 
@@ -258,6 +291,7 @@ async function GetStudentResult(student_id, result_id) {
     return data;
   } catch (err) {
     console.log(err.message);
+    throw err;
   }
 }
 
@@ -279,6 +313,7 @@ async function GetMyNotices(teacher_id) {
     return data;
   } catch (err) {
     console.log(err.message);
+    throw err;
   }
 }
 
@@ -306,6 +341,54 @@ async function CreateNotice(notice) {
     return data;
   } catch (err) {
     console.log(err.message);
+    throw err;
+  }
+}
+
+async function UpdateNotice(noticeId, notice) {
+  try {
+    const response = await fetch(`${api_url}/notice/${noticeId}`, {
+      method: "PUT",
+      headers: {
+        "Content-type": "application/json",
+      },
+      body: JSON.stringify({
+        text: notice.text,
+        teacher_id: notice.teacher_id,
+        batch_codes: notice.batch_codes,
+      })
+    });
+
+    if (!response.ok) {
+      const err = await response.json();
+      throw new Error(err.detail);
+    }
+
+    return await response.json();
+  } catch (err) {
+    console.log(err.message);
+    throw err;
+  }
+}
+
+async function DeleteNotice(noticeId) {
+  try {
+    const response = await fetch(`${api_url}/notice/${noticeId}`, {
+      method: "DELETE",
+      headers: {
+        "Content-type": "application/json",
+      },
+    });
+
+    if (!response.ok) {
+      const err = await response.json();
+      throw new Error(err.detail);
+    }
+
+    return true;
+  } catch (err) {
+    console.log(err.message);
+    throw err;
   }
 }
 
@@ -327,5 +410,6 @@ async function GetNoticesForStudent(student_id) {
     return data;
   } catch (err) {
     console.log(err.message);
+    throw err;
   }
 }

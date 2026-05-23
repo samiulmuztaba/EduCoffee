@@ -12,6 +12,7 @@ class User(BaseModel):
     password: str
     role: Literal['teacher', 'student']
     batch_codes: Optional[List] = None
+    plan: Optional[Literal['Starter', 'Professional', 'Elite']] = None
 
 class UserLogin(BaseModel):
     email: EmailStr
@@ -39,6 +40,7 @@ class Result(BaseModel):
     scores: List[StudentScore]
 
 class Notice(BaseModel):
+    id: Optional[str] = None
     text: str
     teacher_id: str
     batch_codes: List[str]

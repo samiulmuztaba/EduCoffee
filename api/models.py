@@ -1,6 +1,6 @@
 from sqlalchemy import Column, String, Enum, Float, Boolean, DateTime, Integer, ForeignKey, JSON
 from sqlalchemy.orm import relationship
-from database import Base
+from .database import Base
 import uuid
 from datetime import datetime
 # from typing import List
@@ -16,6 +16,7 @@ class User(Base):
     password = Column(String)
     role = Column(Enum('teacher', 'student'))
     batch_codes = Column(JSON, nullable=True)
+    plan = Column(Enum('Starter', 'Professional', 'Elite'), nullable=True)
 
 class Batch(Base):
     __tablename__ = 'batches'

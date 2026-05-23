@@ -1,9 +1,10 @@
 from fastapi import APIRouter, HTTPException, Depends
 from sqlalchemy.orm import Session
 from typing import List
-import schemas
-import models
-from database import get_db
+
+from . import schemas
+from . import models
+from .database import get_db
 
 router = APIRouter(prefix="/api")
 
@@ -124,9 +125,9 @@ def enroll_in_batch(batch_code, student_id, db: Session = Depends(get_db)):
     updated_batch_codes.append(batch_code)
     student.batch_codes = updated_batch_codes
 
-    return student
     db.commit()
     db.refresh(student)
+    return student
 
 @router.get('/students_in_batch/{batch_code}', response_model=List[schemas.User], status_code=200)
 def get_students_in_batch(batch_code, db: Session = Depends(get_db)):
@@ -194,7 +195,7 @@ def create_result(result: schemas.Result, db: Session = Depends(get_db)):
 def get_student_results(student_id: str, db: Session = Depends(get_db)):
     scores = db.query(models.StudentScore).filter(models.StudentScore.student_id == student_id).all()
     if not scores:
-        raise HTTPException(404, 'No results found')
+        return []
     return scores
 
 @router.get('/results/student/{student_id}/{result_id}', status_code=200)
@@ -245,6 +246,31 @@ def create_new_notice(notice: schemas.Notice, db: Session = Depends(get_db)):
     db.commit()
     db.refresh(new_notice)
     return new_notice
+
+@router.put("/notice/{notice_id}", response_model=schemas.Notice, status_code=200)
+def update_notice(notice_id: str, notice: schemas.Notice, db: Session = Depends(get_db)):
+    db_notice = db.query(models.Notice).filter(models.Notice.id == notice_id).first()
+    if not db_notice:
+        raise HTTPException(404, "Notice Not Found")
+
+    db_notice.text = notice.text
+    db_notice.teacher_id = notice.teacher_id
+    db_notice.batch_codes = notice.batch_codes
+    db_notice.created_at = notice.created_at or db_notice.created_at
+
+    db.commit()
+    db.refresh(db_notice)
+    return db_notice
+
+@router.delete("/notice/{notice_id}", status_code=204)
+def delete_notice(notice_id: str, db: Session = Depends(get_db)):
+    db_notice = db.query(models.Notice).filter(models.Notice.id == notice_id).first()
+    if not db_notice:
+        raise HTTPException(404, "Notice Not Found")
+
+    db.delete(db_notice)
+    db.commit()
+    return None
 
 @router.get('/my_notices/{teacher_id}', response_model=List[schemas.Notice], status_code=200)
 def get_my_notices(teacher_id, db: Session = Depends(get_db)):
