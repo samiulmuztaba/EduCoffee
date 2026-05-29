@@ -272,6 +272,12 @@ async function init() {
 
     // Fetch raw scores for this student
     const rawScores = await apiFetch(`/results/student/${studentId}`) || [];
+allScores = rawScores.map(s => ({
+    ...s,
+    percentage: (s.marks !== null && s.total_marks)
+        ? Math.round((s.marks / s.total_marks) * 100)
+        : null
+}));
 
     if (!rawScores.length) {
         allScores = [];
