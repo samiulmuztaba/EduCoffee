@@ -191,13 +191,6 @@ def create_result(result: schemas.Result, db: Session = Depends(get_db)):
     db.commit()
     return {'message': 'Results published successfully'}
 
-@router.get('/results/student/{student_id}', status_code=200)
-def get_student_results(student_id: str, db: Session = Depends(get_db)):
-    scores = db.query(models.StudentScore).filter(models.StudentScore.student_id == student_id).all()
-    if not scores:
-        return []
-    return scores
-
 @router.get('/results/student/{student_id}/{result_id}', status_code=200)
 def get_student_result(student_id: str, result_id: str, db: Session = Depends(get_db)):
     score = db.query(models.StudentScore).filter(
@@ -206,7 +199,48 @@ def get_student_result(student_id: str, result_id: str, db: Session = Depends(ge
     ).first()
     if not score:
         raise HTTPException(404, 'Result not found')
-    return score
+    
+    parent = db.query(models.Result).filter(
+        models.Result.id == score.result_id
+    ).first()
+    
+    return {
+        "result_id":        score.result_id,
+        "marks":            score.marks,
+        "remarks":          score.remarks,
+        "absent":           score.absent,
+        "seen_by_guardian": score.seen_by_guardian,
+        "title":            parent.title if parent else "Untitled",
+        "description":      parent.description if parent else "",
+        "total_marks":      parent.total_marks if parent else None,
+        "batch_code":       parent.batch_code if parent else None,
+    }
+
+@router.get('/results/student/{student_id}', status_code=200)
+def get_student_results(student_id: str, db: Session = Depends(get_db)):
+    scores = db.query(models.StudentScore).filter(
+        models.StudentScore.student_id == student_id
+    ).all()
+    if not scores:
+        return []
+    
+    result = []
+    for score in scores:
+        parent = db.query(models.Result).filter(
+            models.Result.id == score.result_id
+        ).first()
+        result.append({
+            "result_id":        score.result_id,
+            "marks":            score.marks,
+            "remarks":          score.remarks,
+            "absent":           score.absent,
+            "seen_by_guardian": score.seen_by_guardian,
+            "title":            parent.title if parent else "Untitled",
+            "description":      parent.description if parent else "",
+            "total_marks":      parent.total_marks if parent else None,
+            "batch_code":       parent.batch_code if parent else None,
+        })
+    return result
 
 @router.get("/notices", response_model=List[schemas.Notice], status_code=200)
 def get_all_notices(db: Session = Depends(get_db)):
